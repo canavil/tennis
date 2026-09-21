@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>그린코트 테니스장 예약 관리 시스템</title>
+    <title>테니스장 예약 통합 관리 시스템</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -12,7 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        /* Custom Scrollbar for Desktop App feel */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
@@ -21,21 +20,21 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col select-none">
 
-    <!-- Desktop App Titlebar Style -->
+    <!-- Top Titlebar -->
     <header class="bg-slate-900 text-white shadow-md flex justify-between items-center px-4 py-2.5 border-b border-slate-800">
         <div class="flex items-center space-x-3">
             <div class="bg-emerald-600 text-white p-1.5 rounded-lg shadow-xs flex items-center justify-center">
                 <i class="fa-solid fa-table-tennis-paddle-ball text-sm"></i>
             </div>
             <div>
-                <h1 class="text-xs font-bold tracking-wide uppercase text-slate-200">그린코트 테니스장 관리 프로그램 v2.0</h1>
+                <h1 class="text-xs font-bold tracking-wide uppercase text-slate-200">테니스장 예약 통합 관리 시스템 v3.0</h1>
             </div>
         </div>
         <div class="flex items-center gap-4 text-xs text-slate-400">
-            <span id="system-clock" class="font-mono bg-slate-800 px-2 py-1 rounded border border-slate-700">2026-09-21 13:18:02</span>
+            <span id="system-clock" class="font-mono bg-slate-800 px-2 py-1 rounded border border-slate-700">2026-09-21 13:37:31</span>
             <div class="flex items-center gap-1.5 bg-emerald-900/60 text-emerald-300 px-2.5 py-1 rounded border border-emerald-700/50">
                 <i class="fa-solid fa-circle text-[8px] text-emerald-400 animate-pulse"></i>
-                <span class="font-medium">시스템 정상 운영중</span>
+                <span class="font-medium">정상 운영중</span>
             </div>
         </div>
     </header>
@@ -43,9 +42,9 @@
     <!-- Main Workspace -->
     <main class="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-5 grid grid-cols-1 lg:grid-cols-5 gap-5">
         
-        <!-- Left Sidebar: Controls, Quick Stats & Filters -->
+        <!-- Left Sidebar: Quick Menu & Filters -->
         <aside class="lg:col-span-1 space-y-4 flex flex-col">
-            <!-- Program Menu Panel -->
+            <!-- Quick Actions -->
             <div class="bg-white p-4 rounded-xl shadow-xs border border-slate-200/80 space-y-3">
                 <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">빠른 작업</h2>
                 <button onclick="openAddModalToday()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-3 rounded-lg text-xs font-semibold transition shadow-xs flex items-center justify-center gap-2">
@@ -56,7 +55,7 @@
                 </button>
             </div>
 
-            <!-- Today Quick Summary -->
+            <!-- Today Summary -->
             <div class="bg-white p-4 rounded-xl shadow-xs border border-slate-200/80 space-y-3">
                 <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">오늘 요약 현황</h2>
                 <div class="space-y-2">
@@ -68,50 +67,36 @@
                     </div>
                     <div class="flex justify-between items-center p-2.5 bg-blue-50/70 rounded-lg border border-blue-100">
                         <span class="text-xs text-blue-800 font-medium flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-blue-500"></span> 이용 중
+                            <span class="w-2 h-2 rounded-full bg-blue-500"></span> 이용 중 / 완료
                         </span>
                         <span id="stat-using" class="text-xs font-bold text-blue-700">0건</span>
                     </div>
-                    <div class="flex justify-between items-center p-2.5 bg-amber-50/70 rounded-lg border border-amber-100">
-                        <span class="text-xs text-amber-800 font-medium flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-amber-400"></span> 잔여 슬롯
-                        </span>
-                        <span id="stat-available" class="text-xs font-bold text-amber-700">-</span>
-                    </div>
                 </div>
             </div>
 
-            <!-- Court Filters -->
+            <!-- Tennis Court Filter -->
             <div class="bg-white p-4 rounded-xl shadow-xs border border-slate-200/80 space-y-3">
-                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">코트 보기 필터</h2>
-                <div class="space-y-2">
-                    <label class="flex items-center gap-2.5 p-1.5 rounded-md hover:bg-slate-50 cursor-pointer transition text-xs">
-                        <input type="checkbox" checked class="court-filter w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" value="1번 코트" onchange="renderCalendar()">
-                        <span class="font-medium text-slate-700">1번 코트 (클레이)</span>
-                    </label>
-                    <label class="flex items-center gap-2.5 p-1.5 rounded-md hover:bg-slate-50 cursor-pointer transition text-xs">
-                        <input type="checkbox" checked class="court-filter w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" value="2번 코트" onchange="renderCalendar()">
-                        <span class="font-medium text-slate-700">2번 코트 (하드)</span>
-                    </label>
-                    <label class="flex items-center gap-2.5 p-1.5 rounded-md hover:bg-slate-50 cursor-pointer transition text-xs">
-                        <input type="checkbox" checked class="court-filter w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" value="실내 3번 코트" onchange="renderCalendar()">
-                        <span class="font-medium text-slate-700">실내 3번 코트 (인조잔디)</span>
-                    </label>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">테니스장 필터</h2>
+                    <button onclick="toggleAllFilters(true)" class="text-[10px] text-emerald-600 hover:underline">전체선택</button>
+                </div>
+                <div id="filter-container" class="space-y-1.5 max-h-[300px] overflow-y-auto pr-1">
+                    <!-- Injected via JS -->
                 </div>
             </div>
 
-            <!-- App Guide Box -->
+            <!-- Notice -->
             <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white p-4 rounded-xl shadow-xs flex-1 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center gap-1.5 text-emerald-400 font-semibold text-xs mb-1.5">
-                        <i class="fa-solid fa-circle-info"></i> 프로그램 사용 팁
+                        <i class="fa-solid fa-circle-info"></i> 안내
                     </div>
                     <p class="text-[11px] text-slate-300 leading-relaxed">
-                        캘린더의 각 날짜 박스를 클릭하면 해당 일자의 전체 타임라인(09:00~21:00) 예약 관리창이 열립니다. 데이터는 브라우저 저장소에 자동으로 보존됩니다.
+                        캘린더의 날짜를 클릭하면 해당 일자의 상세 예약 목록을 확인하고 관리할 수 있습니다. 입력 정보는 브라우저에 안전하게 보존됩니다.
                     </p>
                 </div>
                 <div class="mt-3 pt-3 border-t border-slate-700 text-[10px] text-slate-400 flex justify-between">
-                    <span>데이터 저장소</span>
+                    <span>저장소</span>
                     <span class="text-emerald-400 font-mono">LocalStorage Active</span>
                 </div>
             </div>
@@ -130,9 +115,7 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3 text-xs text-slate-500 font-medium">
-                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 예약 완료</span>
-                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> 이용 중</span>
-                    <span class="text-slate-400 font-normal">| 총 <span id="total-count" class="font-bold text-slate-700">0</span>건 등록됨</span>
+                    <span class="text-slate-400">총 예약 <span id="total-count" class="font-bold text-slate-700">0</span>건</span>
                 </div>
             </div>
 
@@ -156,97 +139,98 @@
         </section>
     </main>
 
-    <!-- Day Detail & Management Modal -->
+    <!-- Day Detail List Modal -->
     <div id="day-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-2xs z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh] border border-slate-200">
-            <!-- Modal Header -->
+        <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-slate-200">
             <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center border-b border-slate-800">
                 <div>
-                    <h3 id="modal-date-title" class="text-base font-bold">2026년 9월 21일 예약 현황</h3>
-                    <p class="text-xs text-slate-400">코트별 시간대별 상세 예약 관리 및 타임라인</p>
+                    <h3 id="modal-date-title" class="text-base font-bold">2026년 9월 21일 예약 내역</h3>
+                    <p class="text-xs text-slate-400">해당 일자에 등록된 테니스장 예약 목록</p>
                 </div>
                 <button onclick="closeDayModal()" class="text-slate-400 hover:text-white p-2 rounded-lg transition"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
-            <!-- Modal Body (Timeline Table) -->
             <div class="p-6 overflow-y-auto flex-1 space-y-4">
                 <div class="flex justify-between items-center">
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">시간대별 코트 배정 현황</span>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">예약 리스트</span>
                     <button onclick="openAddModalForDate()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3.5 py-2 rounded-lg font-semibold transition flex items-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-plus text-xs"></i> 해당 일자 예약 추가
+                        <i class="fa-solid fa-plus text-xs"></i> 신규 예약 등록
                     </button>
                 </div>
                 
                 <div class="border border-slate-200 rounded-xl overflow-x-auto shadow-2xs">
-                    <table class="w-full text-left border-collapse text-sm min-w-[700px]">
+                    <table class="w-full text-left border-collapse text-xs min-w-[750px]">
                         <thead>
-                            <tr class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs">
-                                <th class="p-3 font-semibold w-28">시간대</th>
-                                <th class="p-3 font-semibold">1번 코트 (클레이)</th>
-                                <th class="p-3 font-semibold">2번 코트 (하드)</th>
-                                <th class="p-3 font-semibold">실내 3번 코트 (인조잔디)</th>
+                            <tr class="bg-slate-50 text-slate-600 border-b border-slate-200">
+                                <th class="p-3 font-semibold">테니스장</th>
+                                <th class="p-3 font-semibold">날짜 / 시간</th>
+                                <th class="p-3 font-semibold">코트</th>
+                                <th class="p-3 font-semibold">비용</th>
+                                <th class="p-3 font-semibold">상태</th>
+                                <th class="p-3 font-semibold">비고</th>
+                                <th class="p-3 font-semibold text-right">관리</th>
                             </tr>
                         </thead>
-                        <tbody id="modal-timeline-body" class="divide-y divide-slate-100">
-                            <!-- Dynamically injected time slots -->
+                        <tbody id="modal-reservation-list" class="divide-y divide-slate-100">
+                            <!-- Injected via JS -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Modal Footer -->
             <div class="bg-slate-50 px-6 py-3 border-t border-slate-200 flex justify-end">
                 <button onclick="closeDayModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-lg text-xs font-semibold transition">닫기</button>
             </div>
         </div>
     </div>
 
-    <!-- Add/Edit Reservation Modal -->
+    <!-- Add/Edit Reservation Form Modal -->
     <div id="reservation-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-2xs z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
             <div class="bg-slate-800 text-white px-6 py-4 flex justify-between items-center">
                 <h3 id="form-modal-title" class="text-sm font-bold">신규 예약 등록</h3>
                 <button onclick="closeReservationModal()" class="text-slate-400 hover:text-white p-2 rounded-lg transition"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <form id="reservation-form" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
+            <form id="reservation-form" onsubmit="handleFormSubmit(event)" class="p-6 space-y-3.5">
                 <input type="hidden" id="edit-id">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">코트 선택</label>
-                    <select id="form-court" required class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
-                        <option value="1번 코트">1번 코트 (클레이)</option>
-                        <option value="2번 코트">2번 코트 (하드)</option>
-                        <option value="실내 3번 코트">실내 3번 코트 (인조잔디)</option>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">테니스장 선택</label>
+                    <select id="form-stadium" required class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+                        <!-- Injected via JS -->
                     </select>
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">예약 날짜</label>
-                    <input type="date" id="form-date" required class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">날짜</label>
+                        <input type="date" id="form-date" required class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">시간</label>
+                        <input type="text" id="form-time" required placeholder="예: 10:00 - 12:00" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">시간대</label>
-                    <select id="form-time" required class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
-                        <option value="09:00 - 11:00">09:00 - 11:00</option>
-                        <option value="11:00 - 13:00">11:00 - 13:00</option>
-                        <option value="13:00 - 15:00">13:00 - 15:00</option>
-                        <option value="15:00 - 17:00">15:00 - 17:00</option>
-                        <option value="17:00 - 19:00">17:00 - 19:00</option>
-                        <option value="19:00 - 21:00">19:00 - 21:00</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">예약자 성명</label>
-                    <input type="text" id="form-name" required placeholder="예: 홍길동" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">연락처</label>
-                    <input type="text" id="form-phone" required placeholder="예: 010-1234-5678" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">코트</label>
+                        <input type="text" id="form-court" required placeholder="예: 1번 코트" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">비용 (원)</label>
+                        <input type="text" id="form-cost" required placeholder="예: 20,000" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+                    </div>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">예약 상태</label>
                     <select id="form-status" required class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
                         <option value="예약 완료">예약 완료</option>
                         <option value="이용 중">이용 중</option>
+                        <option value="이용 완료">이용 완료</option>
+                        <option value="예약 취소">예약 취소</option>
                     </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">비고</label>
+                    <input type="text" id="form-memo" placeholder="예: 동호회 정기모임" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="closeReservationModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-xs font-semibold transition">취소</button>
@@ -256,41 +240,42 @@
         </div>
     </div>
 
-    <!-- Custom Toast Notification -->
+    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl transition-all duration-300 transform translate-y-20 opacity-0 z-50 flex items-center gap-3 text-xs border border-slate-700">
         <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
         <span id="toast-message">알림 메시지입니다.</span>
     </div>
 
     <script>
-        // LocalStorage Integration for Persistent Desktop App Data
-        const STORAGE_KEY = 'tennis_reservations_v2';
-        
+        const STORAGE_KEY = 'tennis_reservations_v3';
+
+        const stadiums = [
+            '오정테니스장',
+            '부천체육관테니스장',
+            '종합운동장테니스장',
+            '원미테니스장',
+            '복사골테니스장',
+            '성주산테니스장',
+            '남부수자원테니스장',
+            '소사배수지테니스장',
+            '열우물테니스장'
+        ];
+
         let sampleReservations = [
-            { id: 1, date: '2026-09-21', court: '1번 코트', time: '09:00 - 11:00', name: '김테니스', phone: '010-1111-2222', status: '이용 중' },
-            { id: 2, date: '2026-09-21', court: '2번 코트', time: '11:00 - 13:00', name: '박서브', phone: '010-3333-4444', status: '예약 완료' },
-            { id: 3, date: '2026-09-21', court: '실내 3번 코트', time: '15:00 - 17:00', name: '이발리', phone: '010-5555-6666', status: '예약 완료' },
-            { id: 4, date: '2026-09-22', court: '1번 코트', time: '13:00 - 15:00', name: '정스매시', phone: '010-7777-8888', status: '예약 완료' },
-            { id: 5, date: '2026-09-25', court: '실내 3번 코트', time: '19:00 - 21:00', name: '최에이스', phone: '010-9999-0000', status: '예약 완료' }
+            { id: 1, stadium: '오정테니스장', date: '2026-09-21', time: '10:00 - 12:00', court: '1코트', cost: '20,000', status: '예약 완료', memo: '주말 모임' },
+            { id: 2, stadium: '부천체육관테니스장', date: '2026-09-21', time: '14:00 - 16:00', court: '실내 A코트', cost: '30,000', status: '이용 중', memo: '레슨' },
+            { id: 3, stadium: '원미테니스장', date: '2026-09-23', time: '09:00 - 11:00', court: '2코트', cost: '15,000', status: '예약 완료', memo: '' },
+            { id: 4, stadium: '종합운동장테니스장', date: '2026-09-25', time: '18:00 - 20:00', court: '3코트', cost: '25,000', status: '예약 완료', memo: '야간 경기' }
         ];
 
         let reservations = loadReservations();
         let currentDate = new Date(2026, 8, 1); // 2026년 9월
         let selectedDateStr = '';
 
-        const timeSlots = [
-            '09:00 - 11:00',
-            '11:00 - 13:00',
-            '13:00 - 15:00',
-            '15:00 - 17:00',
-            '17:00 - 19:00',
-            '19:00 - 21:00'
-        ];
-
-        const courtsList = ['1번 코트', '2번 코트', '실내 3번 코트'];
-
         window.onload = function() {
             startClock();
+            initStadiumSelects();
+            initFilters();
             renderCalendar();
             updateSummaryStats();
         };
@@ -306,6 +291,36 @@
                 const ss = String(now.getSeconds()).padStart(2, '0');
                 document.getElementById('system-clock').innerText = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
             }, 1000);
+        }
+
+        function initStadiumSelects() {
+            const select = document.getElementById('form-stadium');
+            select.innerHTML = '';
+            stadiums.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s;
+                opt.innerText = s;
+                select.appendChild(opt);
+            });
+        }
+
+        function initFilters() {
+            const container = document.getElementById('filter-container');
+            container.innerHTML = '';
+            stadiums.forEach(s => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center gap-2.5 p-1 rounded hover:bg-slate-50 cursor-pointer transition text-xs';
+                label.innerHTML = `
+                    <input type="checkbox" checked class="stadium-filter w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" value="${s}" onchange="renderCalendar()">
+                    <span class="font-medium text-slate-700 truncate">${s}</span>
+                `;
+                container.appendChild(label);
+            });
+        }
+
+        function toggleAllFilters(checkState) {
+            document.querySelectorAll('.stadium-filter').forEach(cb => cb.checked = checkState);
+            renderCalendar();
         }
 
         function loadReservations() {
@@ -360,9 +375,9 @@
             const grid = document.getElementById('calendar-grid');
             grid.innerHTML = '';
 
-            const activeFilters = Array.from(document.querySelectorAll('.court-filter:checked')).map(cb => cb.value);
+            const activeFilters = Array.from(document.querySelectorAll('.stadium-filter:checked')).map(cb => cb.value);
 
-            // Previous Month days
+            // Previous Month trailing days
             for (let i = firstDayIndex; i > 0; i--) {
                 const dayNum = prevLastDay - i + 1;
                 const cell = createDayCell(year, month - 1, dayNum, true, activeFilters);
@@ -375,7 +390,7 @@
                 grid.appendChild(cell);
             }
 
-            // Next Month days
+            // Next Month leading days
             const totalCellsSoFar = firstDayIndex + lastDay;
             const remainingCells = totalCellsSoFar <= 35 ? 35 - totalCellsSoFar : 42 - totalCellsSoFar;
             for (let i = 1; i <= remainingCells; i++) {
@@ -408,16 +423,16 @@
 
             cell.appendChild(dayHeader);
 
-            const dayReservations = reservations.filter(r => r.date === dateStr && activeFilters.includes(r.court));
+            const dayReservations = reservations.filter(r => r.date === dateStr && activeFilters.includes(r.stadium));
 
             const badgesContainer = document.createElement('div');
             badgesContainer.className = 'space-y-1 overflow-y-auto max-h-[75px] pr-0.5';
 
             dayReservations.forEach(res => {
                 const badge = document.createElement('div');
-                const isUsing = res.status === '이용 중';
-                badge.className = `text-[10px] px-1.5 py-0.5 rounded font-medium truncate flex justify-between items-center ${isUsing ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`;
-                badge.innerHTML = `<span class="truncate">${res.court.replace(' 코트', '')} (${res.name})</span>`;
+                const isCompleted = res.status === '이용 완료' || res.status === '이용 중';
+                badge.className = `text-[10px] px-1.5 py-0.5 rounded font-medium truncate flex justify-between items-center ${isCompleted ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`;
+                badge.innerHTML = `<span class="truncate">${res.stadium.replace('테니스장', '')} (${res.court})</span>`;
                 badgesContainer.appendChild(badge);
             });
 
@@ -429,20 +444,19 @@
             const todayStr = '2026-09-21';
             const todayRes = reservations.filter(r => r.date === todayStr);
             const completedCount = todayRes.filter(r => r.status === '예약 완료').length;
-            const usingCount = todayRes.filter(r => r.status === '이용 중').length;
+            const usingCount = todayRes.filter(r => r.status === '이용 중' || r.status === '이용 완료').length;
 
             document.getElementById('stat-completed').innerText = `${completedCount}건`;
             document.getElementById('stat-using').innerText = `${usingCount}건`;
-            document.getElementById('stat-available').innerText = `${(timeSlots.length * courtsList.length) - todayRes.length}슬롯`;
         }
 
-        // Modal Controls
+        // Day Modal Controls
         function openDayModal(dateStr) {
             selectedDateStr = dateStr;
             const [y, m, d] = dateStr.split('-');
-            document.getElementById('modal-date-title').innerText = `${y}년 ${parseInt(m)}월 ${parseInt(d)}일 예약 현황`;
+            document.getElementById('modal-date-title').innerText = `${y}년 ${parseInt(m)}월 ${parseInt(d)}일 예약 내역`;
 
-            renderTimelineTable(dateStr);
+            renderReservationList(dateStr);
             document.getElementById('day-modal').classList.remove('hidden');
         }
 
@@ -450,73 +464,62 @@
             document.getElementById('day-modal').classList.add('hidden');
         }
 
-        function renderTimelineTable(dateStr) {
-            const tbody = document.getElementById('modal-timeline-body');
+        function renderReservationList(dateStr) {
+            const tbody = document.getElementById('modal-reservation-list');
             tbody.innerHTML = '';
 
-            timeSlots.forEach(slot => {
+            const dayRes = reservations.filter(r => r.date === dateStr);
+
+            if (dayRes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">등록된 예약 내역이 없습니다.</td></tr>`;
+                return;
+            }
+
+            dayRes.forEach(res => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50 transition border-b border-slate-100 last:border-none';
 
-                const tdTime = document.createElement('td');
-                tdTime.className = 'p-3 text-xs font-semibold text-slate-600 align-middle bg-slate-50/50';
-                tdTime.innerText = slot;
-                tr.appendChild(tdTime);
+                let statusBadgeClass = 'bg-emerald-100 text-emerald-800';
+                if (res.status === '이용 중') statusBadgeClass = 'bg-blue-100 text-blue-800';
+                if (res.status === '이용 완료') statusBadgeClass = 'bg-slate-200 text-slate-700';
+                if (res.status === '예약 취소') statusBadgeClass = 'bg-rose-100 text-rose-800';
 
-                courtsList.forEach(court => {
-                    const tdCourt = document.createElement('td');
-                    tdCourt.className = 'p-3 align-middle';
-
-                    const foundRes = reservations.find(r => r.date === dateStr && r.court === court && r.time === slot);
-
-                    if (foundRes) {
-                        const isUsing = foundRes.status === '이용 중';
-                        tdCourt.innerHTML = `
-                            <div class="p-2.5 rounded-xl border ${isUsing ? 'bg-blue-50/80 border-blue-200' : 'bg-emerald-50/80 border-emerald-200'} flex flex-col gap-1 shadow-2xs">
-                                <div class="flex justify-between items-center text-xs">
-                                    <span class="font-bold ${isUsing ? 'text-blue-800' : 'text-emerald-800'}">${foundRes.name}</span>
-                                    <span class="text-[10px] px-1.5 py-0.5 rounded font-medium ${isUsing ? 'bg-blue-200 text-blue-900' : 'bg-emerald-200 text-emerald-900'}">${foundRes.status}</span>
-                                </div>
-                                <div class="text-[11px] text-slate-500">${foundRes.phone}</div>
-                                <div class="flex gap-2 mt-1 pt-1 border-t border-slate-200/60 text-[10px]">
-                                    <button onclick="editReservation(${foundRes.id})" class="text-slate-600 hover:text-emerald-700 font-medium"><i class="fa-solid fa-pen"></i> 수정</button>
-                                    <button onclick="deleteReservation(${foundRes.id})" class="text-rose-600 hover:text-rose-800 font-medium"><i class="fa-solid fa-trash"></i> 삭제</button>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        tdCourt.innerHTML = `
-                            <button onclick="openAddModalWithPreset('${dateStr}', '${court}', '${slot}')" class="w-full py-3 px-2 border border-dashed border-slate-300 rounded-xl text-xs text-slate-400 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50/40 transition flex items-center justify-center gap-1.5">
-                                <i class="fa-solid fa-plus text-[10px]"></i> 예약 가능
-                            </button>
-                        `;
-                    }
-                    tr.appendChild(tdCourt);
-                });
-
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-slate-800">${res.stadium}</td>
+                    <td class="p-3 text-slate-600">${res.date}<br><span class="text-[10px] text-slate-400">${res.time}</span></td>
+                    <td class="p-3 text-slate-700 font-medium">${res.court}</td>
+                    <td class="p-3 text-slate-700">${res.cost}원</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-semibold ${statusBadgeClass}">${res.status}</span></td>
+                    <td class="p-3 text-slate-500 truncate max-w-[120px]">${res.memo || '-'}</td>
+                    <td class="p-3 text-right space-x-2">
+                        <button onclick="editReservation(${res.id})" class="text-slate-600 hover:text-emerald-700 font-medium"><i class="fa-solid fa-pen"></i> 수정</button>
+                        <button onclick="deleteReservation(${res.id})" class="text-rose-600 hover:text-rose-800 font-medium"><i class="fa-solid fa-trash"></i> 삭제</button>
+                    </td>
+                `;
                 tbody.appendChild(tr);
             });
         }
 
         function openAddModalToday() {
             const todayStr = '2026-09-21';
-            openAddModalWithPreset(todayStr, '1번 코트', '09:00 - 11:00');
+            openAddModalWithPreset(todayStr);
         }
 
         function openAddModalForDate() {
             closeDayModal();
-            openAddModalWithPreset(selectedDateStr, '1번 코트', '09:00 - 11:00');
+            openAddModalWithPreset(selectedDateStr);
         }
 
-        function openAddModalWithPreset(date, court, time) {
+        function openAddModalWithPreset(date) {
             document.getElementById('form-modal-title').innerText = '신규 예약 등록';
             document.getElementById('edit-id').value = '';
-            document.getElementById('form-court').value = court;
+            document.getElementById('form-stadium').value = stadiums[0];
             document.getElementById('form-date').value = date;
-            document.getElementById('form-time').value = time;
-            document.getElementById('form-name').value = '';
-            document.getElementById('form-phone').value = '';
+            document.getElementById('form-time').value = '10:00 - 12:00';
+            document.getElementById('form-court').value = '1코트';
+            document.getElementById('form-cost').value = '20,000';
             document.getElementById('form-status').value = '예약 완료';
+            document.getElementById('form-memo').value = '';
 
             document.getElementById('reservation-modal').classList.remove('hidden');
         }
@@ -527,12 +530,13 @@
 
             document.getElementById('form-modal-title').innerText = '예약 정보 수정';
             document.getElementById('edit-id').value = res.id;
-            document.getElementById('form-court').value = res.court;
+            document.getElementById('form-stadium').value = res.stadium;
             document.getElementById('form-date').value = res.date;
             document.getElementById('form-time').value = res.time;
-            document.getElementById('form-name').value = res.name;
-            document.getElementById('form-phone').value = res.phone;
+            document.getElementById('form-court').value = res.court;
+            document.getElementById('form-cost').value = res.cost;
             document.getElementById('form-status').value = res.status;
+            document.getElementById('form-memo').value = res.memo;
 
             closeDayModal();
             document.getElementById('reservation-modal').classList.remove('hidden');
@@ -545,25 +549,20 @@
         function handleFormSubmit(event) {
             event.preventDefault();
             const editId = document.getElementById('edit-id').value;
-            const court = document.getElementById('form-court').value;
+            const stadium = document.getElementById('form-stadium').value;
             const date = document.getElementById('form-date').value;
             const time = document.getElementById('form-time').value;
-            const name = document.getElementById('form-name').value;
-            const phone = document.getElementById('form-phone').value;
+            const court = document.getElementById('form-court').value;
+            const cost = document.getElementById('form-cost').value;
             const status = document.getElementById('form-status').value;
-
-            const conflict = reservations.find(r => r.date === date && r.court === court && r.time === time && r.id != editId);
-            if (conflict) {
-                showToast('⚠️ 해당 시간대와 코트에 이미 예약이 존재합니다.');
-                return;
-            }
+            const memo = document.getElementById('form-memo').value;
 
             if (editId) {
-                reservations = reservations.map(r => r.id == editId ? { ...r, court, date, time, name, phone, status } : r);
+                reservations = reservations.map(r => r.id == editId ? { ...r, stadium, date, time, court, cost, status, memo } : r);
                 showToast('예약 정보가 수정되었습니다.');
             } else {
                 const newId = reservations.length > 0 ? Math.max(...reservations.map(r => r.id)) + 1 : 1;
-                reservations.push({ id: newId, date, court, time, name, phone, status });
+                reservations.push({ id: newId, stadium, date, time, court, cost, status, memo });
                 showToast('신규 예약이 등록되었습니다.');
             }
 
@@ -574,7 +573,7 @@
         }
 
         function deleteReservation(id) {
-            if (confirm('해당 예약을 정말 취소(삭제)하시겠습니까?')) {
+            if (confirm('해당 예약을 정말 삭제하시겠습니까?')) {
                 reservations = reservations.filter(r => r.id !== id);
                 saveReservations();
                 showToast('예약이 삭제되었습니다.');
